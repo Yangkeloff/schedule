@@ -1,0 +1,35 @@
+<!-- 我的 -->
+<template>
+  <view class='container'>
+    <open-data type="userAvatarUrl"></open-data>
+    <open-data type="userNickName"></open-data>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Me extends wepy.page {
+    config = {
+      navigationBarTitleText: '',
+    }
+
+    data = {}
+
+    components = {}
+
+    methods = {}
+
+    events = {}
+
+    watch = {}
+
+    computed = {}
+
+    onLoad() { }
+
+    onShow() { }
+  }
+</script>
+
+<style lang='less'>
+</style>
