@@ -15,5 +15,6 @@
 	"miniprogramRoot": "dist/",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"condition": {}
+	"condition": {},
+	"cloudfunctionRoot": "./functions/"
 }

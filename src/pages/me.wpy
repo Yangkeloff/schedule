@@ -1,8 +1,8 @@
 <!-- 我的 -->
 <template>
-  <view class='container'>
-    <open-data type="userAvatarUrl"></open-data>
-    <open-data type="userNickName"></open-data>
+  <view class='me'>
+    <open-data class="avatar" type="userAvatarUrl"></open-data>
+    <open-data class="nickName" type="userNickName"></open-data>
   </view>
 </template>
 
@@ -32,4 +32,21 @@
 </script>
 
 <style lang='less'>
+.me {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  background-color: #fff;
+}
+.avatar{
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.nickName{
+
+}
 </style>

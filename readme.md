@@ -44,3 +44,31 @@ WePY中的methods属性，因为与Vue中的使用习惯不一致，非常容易
     //template
     <van-button type="primary">按钮</van-button>
     ```
+4. open-data标签的头像圆角
+常规方法只设置`border-radius: 50%;`无效,需要同时设置
+```
+border-radius: 50%;
+overflow: hidden;
+```
+5. wepy使用云函数
+- project.config.json中添加`"cloudfunctionRoot": "./functions/"`并在项目**根目录**创建文件夹functions
+- 在微信开发者工具中右键`functions | mini-program`文件夹,新建Node.js云函数
+- 在编辑器中对index.js进行编写,完成后在微信开发者工具中右键此云函数上传并部署
+- 调用:
+    ```
+    wx.cloud.callFunction({
+    // 云函数名称
+    name: 'add',
+    // 传给云函数的参数
+    data: {
+        a: 1,
+        b: 2,
+    },
+    })
+    .then(res => {
+    console.log(res.result) // 3
+    })
+    .catch(console.error)
+    ```
+6. 什么时候使用`setStorage`什么时候使用`setStorageSync`?
+前者为异步操作，后者为同步操作，若后续的操作依赖于更改storage后的数据，则需要同步，否则后续操作执行时还是使用的未更新的数据。若后续操作无需用到更改的storage数据，则不需要立即同步，这时用异步操作即可，节省内存

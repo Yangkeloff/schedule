@@ -19,6 +19,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/plan',
+      'pages/login',
       'pages/me',
       'pages/discover',
       'pages/clock'
@@ -65,12 +66,39 @@ export default class extends wepy.app {
     super()
     this.use('requestfix')
   }
-
-  onLaunch() {
-    this.testAsync()
-    wx.cloud.init()
+  checkLoginStatus() {
+    let that = this
+    let loginFlag = wx.getStorageSync('loginFlag')
+    if (loginFlag) {
+      // 检查session_key是否过期
+      wx.checkSession({
+        success: (result) => {
+          let userStorageInfo = wx.getStorageSync('userInfo')
+          if (userStorageInfo) {
+            that.globalData.userInfo = JSON.parse(userStorageInfo)
+          } else {
+            console.error('登录成功后用户信息将存在Storage的userStorageInfo中')
+          }
+        },
+        fail: () => {
+          that.doLogin()
+        }
+      })
+    } else {
+      that.doLogin()
+    }
   }
 
+  doLogin() {
+    wx.redirectTo({
+      url: './pages/login'
+    })
+  }
+
+  onLaunch() {
+    this.checkLoginStatus()
+    wx.cloud.init()
+  }
   sleep (s) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {

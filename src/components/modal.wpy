@@ -1,0 +1,137 @@
+<!-- modal -->
+<template>
+  <view class='modal'>
+    <view class="content">
+      <slot name="modalSlot"></slot>
+      <form @submit="submit">
+        <view class="section">
+          <view class="section__title">计划类型：</view>
+          <view class="section__content">
+            <picker @change="typeChange" name="planType" value="{{index}}" range="{{planType}}">
+              <view class="picker">
+                {{planType[index]}}
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="section">
+          <view class="section__title">计划名称：</view>
+          <view class="section__content">
+            <input type="text" name="planName" placeholder="输入你的计划" />
+          </view>
+        </view>
+        <view class="section">
+          <view class="section__title">备注：</view>
+          <view class="section__content">
+            <textarea name="planRemark" placeholder="来份鸡汤" />
+          </view>
+        </view>
+        <view class="btns">
+          <button @tap="closeModal">取消</button>
+          <button form-type="submit">添加</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Modal extends wepy.component {
+    props = {
+      planType: {
+        type: Array,
+        default: []
+      }
+    }
+
+    data = {
+      openid: '',
+      index: 0
+    }
+
+    components = {}
+
+    methods = {
+      closeModal(){
+        this.$emit('closeModal')
+      },
+      typeChange(e){
+        this.index = e.detail.value
+      },
+      submit(e){
+        let {
+          planType, 
+          planName, 
+          planRemark
+        } = e.detail.value
+        let plan = {
+          planType, 
+          planName, 
+          planRemark
+        }
+        this.$emit('addPlan', plan)
+      }
+    }
+
+    events = {}
+
+    watch = {}
+
+    computed = {}
+
+    onLoad() { }
+
+    onShow() { }
+
+    getContext(){
+      let that = this
+      wx.cloud.callFunction({
+        // 云函数名称
+        name: 'getContext',
+        // 传给云函数的参数
+        data: {}
+      })
+      .then(res => {
+        that.openid = res.data.openid
+      })
+      .catch(console.error)
+    }
+  }
+</script>
+
+<style lang='less'>
+.modal{
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100%;
+  width: 100%;
+  color: rgb(186, 238, 238);
+  background-color: rgba(0,0,0,0.3)
+}
+.content{
+  order: 2;
+  text-align: center;
+}
+.section{
+  display: flex;
+  flex-direction: row;
+  margin: 20rpx;
+  .section__title{
+    flex: 1;
+  }
+  .section__content{
+    flex: 2;
+    textarea{
+      width: 100%
+    }
+  }
+}
+.btns{
+  display: flex;
+  flex-direction: row;
+  margin: 20rpx;
+  order:1;
+  justify-content: space-around;
+}
+</style>

@@ -1,0 +1,75 @@
+<!-- index -->
+<template>
+  <view class='login'>
+    <button
+    wx:if="{{canIUse}}"
+    open-type="getUserInfo"
+    @getuserinfo="onGotUserInfo"
+    class="login-btn"
+    >授权登录</button>
+    <view wx:else>请升级微信版本</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'welcome'
+    }
+
+    data = {
+      // 判断小程序的API，回调，参数，组件等是否在当前版本可用
+      canIUse: wx.canIUse('button.open-type.getUserInfo')
+    }
+
+    components = {}
+
+    methods = {
+      onGotUserInfo(e) {
+        if(e.detail.errMsg == 'getUserInfo:ok') {
+          wx.login({timeout: 10000})
+          this.setUserInfo(e.detail.userInfo)
+          wx.switchTab({
+            url: '/pages/plan'
+          })
+        } else {
+          console.log('refused')
+        }
+      }
+    }
+    setUserInfo(userInfo) {
+      wx.setStorageSync('userInfo', userInfo)
+    }
+
+    events = {}
+
+    watch = {}
+
+    computed = {}
+
+    onLoad() { }
+
+    onShow() { }
+  }
+</script>
+
+<style lang='less'>
+.login {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+.login-btn{
+  align-self: flex-end;
+  margin-bottom: 200rpx;
+  width: 340rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  background-color: #138cff;
+  color: #fff;
+  font-size: 30rpx;
+  letter-spacing: 8rpx;
+  border-radius: 40rpx;
+}
+</style>

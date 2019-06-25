@@ -24,7 +24,7 @@
         type: Number,
         default: 0
       },
-      image: {
+      type: {
         type: String,
         default: ''
       },
@@ -130,6 +130,7 @@
       line-height: 70rpx;
       text-align: center;
       background-color: #138cff;
+      border-radius: 20rpx;
       color: #fff;
       font-size: 28rpx;
       transition: background-color 0.3s;

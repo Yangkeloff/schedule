@@ -1,5 +1,5 @@
 <style lang="less">
-  .wrap {
+  .plan {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,15 +17,32 @@
       }
     }
   }
+  .new-btn{
+    position: fixed;
+    bottom: 20rpx;
+    right: 20rpx;
+    width: 200rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    background-color: #138cff;
+    color: #fff;
+    font-size: 25rpx;
+    border-radius: 40rpx;
+  }
+  .new-plan{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
 </style>
 <template>
-  <view class="wrap">
+  <view class="plan">
     <swiper class="swiper">
       <repeat for="{{ planList }}" key="index" index="index" item="item">
         <swiper-item>
           <planCard 
             :id="item.id"
-            :image="item.image"
+            :type="item.type"
             :title="item.title"
             :remark="item.remark"
             :createtime="item.create_time"
@@ -35,70 +52,69 @@
         </swiper-item>
       </repeat>
     </swiper>
+    <button class="new-btn" @tap="onNew">
+      新计划
+    </button>
+    <newPlan 
+    wx:if="{{showFlag}}" 
+    class="new-plan"
+    :planType="planType">
+      <view slot="modalSlot">
+        新计划
+      </view>
+    </newPlan>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import { connect } from 'wepy-redux'
   import Toast from 'wepy-com-toast'
-  import testMixin from '../mixins/test'
   import planCard from '../components/planCard'
+  import modal from '../components/modal'
 
-  @connect({
-    num (state) {
-      return state.counter.num
-    },
-    asyncNum (state) {
-      return state.counter.asyncNum
-    },
-    sumNum (state) {
-      return state.counter.num + state.counter.asyncNum
-    }
-  })
-
-  export default class Index extends wepy.page {
+  export default class Plan extends wepy.page {
     config = {
       navigationBarTitleText: '计划'
     }
     components = {
       toast: Toast,
-      planCard
+      planCard,
+      newPlan: modal
     }
 
-    mixins = [testMixin]
-
     data = {
-      planList: [
-        {
-          id: 1,
-          image: '../assets/img/reading.png',
-          title: '阅读',
-          remark: '书籍并不是没有生命的东西，它包藏着一种生命的潜力，与作者同样地活跃。不仅如此，它还像一个宝瓶，把作者生机勃勃的智慧中最纯净的精华保存起来。',
-          create_time: '2018年2月24日',
-          times: 0,
-          hours: '5.22'
-        },
-        {
-          id: 2,
-          image: '../assets/img/reading.png',
-          title: '运动',
-          remark: '一定要每天运动三十分钟',
-          create_time: '2018年2月24日',
-          times: 2,
-          hours: '2.22'
-        }
-      ]
+      planList: [],
+      planType: [
+        '学习',
+        '运动',
+        '娱乐'
+      ],
+      showFlag: false
     }
 
     computed = {}
 
-    methods = {}
+    methods = {
+      onNew() {
+        this.changeShow()
+      }
+    }
 
-    events = {}
+    changeShow(){
+      this.showFlag = !this.showFlag
+    }
+
+    events = {
+      closeModal() {
+        this.changeShow()
+      },
+      addPlan(plan) {
+        this.changeShow()
+        console.log(plan)
+      }
+    }
 
     onLoad() {
-      
     }
 
     onShow() {
