@@ -17,17 +17,17 @@
         <view class="section">
           <view class="section__title">计划名称：</view>
           <view class="section__content">
-            <input type="text" name="planName" placeholder="输入你的计划" />
+            <input type="text" name="planTitle" placeholder="输入你的计划" />
           </view>
         </view>
         <view class="section">
-          <view class="section__title">备注：</view>
+          <view class="section__title">说点什么：</view>
           <view class="section__content">
             <textarea name="planRemark" placeholder="来份鸡汤" />
           </view>
         </view>
         <view class="btns">
-          <button @tap="closeModal">取消</button>
+          <button @tap="closeModal" class="cancle">取消</button>
           <button form-type="submit">添加</button>
         </view>
       </form>
@@ -46,7 +46,6 @@
     }
 
     data = {
-      openid: '',
       index: 0
     }
 
@@ -62,12 +61,12 @@
       submit(e){
         let {
           planType, 
-          planName, 
+          planTitle, 
           planRemark
         } = e.detail.value
         let plan = {
           planType, 
-          planName, 
+          planTitle, 
           planRemark
         }
         this.$emit('addPlan', plan)
@@ -83,20 +82,6 @@
     onLoad() { }
 
     onShow() { }
-
-    getContext(){
-      let that = this
-      wx.cloud.callFunction({
-        // 云函数名称
-        name: 'getContext',
-        // 传给云函数的参数
-        data: {}
-      })
-      .then(res => {
-        that.openid = res.data.openid
-      })
-      .catch(console.error)
-    }
   }
 </script>
 
@@ -106,12 +91,34 @@
   flex-direction: column-reverse;
   height: 100%;
   width: 100%;
-  color: rgb(186, 238, 238);
+  color: #000000;
+  font-weight: 500;
   background-color: rgba(0,0,0,0.3)
 }
 .content{
-  order: 2;
   text-align: center;
+  padding: 30rpx;
+  background-color: #ffffff;
+  border-top-left-radius: 30rpx;
+  border-top-right-radius: 30rpx;
+  .btns{
+    display: flex;
+    flex-direction: row;
+    margin: 20rpx;
+    justify-content: space-around;
+    button{
+      width: 250rpx;
+      height: 100rpx;
+      text-align: center;
+      line-height: 80rpx;
+      background-color: #138cff;
+      font-size: 25rpx;
+      border-radius: 30rpx;
+    }
+    .cancle{
+      background-color: gainsboro;
+    }
+  }
 }
 .section{
   display: flex;
@@ -122,16 +129,16 @@
   }
   .section__content{
     flex: 2;
+    border: 2rpx solid;
+    border-color: rgba(0,0,0,0.3);
+    border-radius: 10rpx;
+    box-shadow: 0 0 12px 2px rgba(0,0,0,.08);
+    input, .picker{
+      min-height: 60rpx;
+    }
     textarea{
-      width: 100%
+      width: 100%;
     }
   }
-}
-.btns{
-  display: flex;
-  flex-direction: row;
-  margin: 20rpx;
-  order:1;
-  justify-content: space-around;
 }
 </style>

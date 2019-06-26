@@ -1,13 +1,18 @@
 <!-- 任务卡片 -->
 <template>
   <view class="plan-card">
+    <view class="del">
+      <image @tap="delPlan({{ id }})" src="../assets/img/del.png"></image>
+    </view>
     <view class="image">
-      <image src="{{ image }}"></image>
+      <image wx:if="{{ type == 0 }}" src="../assets/img/reading.png"></image>
+      <image wx:if="{{ type == 1 }}" src="../assets/img/sport.png"></image>
+      <image wx:if="{{ type == 2 }}" src="../assets/img/entertainment.png"></image>
     </view>
     <text class="title">{{ title }}</text>
     <text class="remark">{{ remark }}</text>
-    <text class="hours">执行 {{ times }} 次,共 {{ hours }} 小时</text>
-    <text class="time">该计划于 {{ createtime }} 创建</text>
+    <text class="hours">执行 {{ times }} 次,共 {{ minutes }} 分钟</text>
+    <text class="time">该计划于 {{createtime[0]}}年{{createtime[1]}}月{{createtime[2]}}日{{createtime[3]}}:{{createtime[4]}}:{{createtime[5]}} 创建</text>
 
     <view class="btn-do" @tap="bindDoPlan({{ id }}, {{ title }})">
       <text wx:if="{{ times <= 0 }}">开始执行</text>
@@ -44,7 +49,7 @@
         type: Number,
         default: 0
       },
-      hours: {
+      minutes: {
         type: Number,
         default: 0
       }
@@ -57,9 +62,11 @@
     methods = {
       bindDoPlan(id, title) {
         if (!id || !title) return
-
         // 跳转至计时器界面
         this.$parent.$navigate('./clock', { planId: id, planTitle: title })
+      },
+      delPlan(id) {
+        this.$emit('delPlan', id)
       }
     }
 
@@ -71,7 +78,9 @@
 
     onLoad() { }
 
-    onShow() {}
+    onShow() {
+      
+    }
   }
 </script>
 
@@ -87,6 +96,17 @@
     box-sizing: border-box;
     border-radius: 5px;
     box-shadow: 0 0 12px 2px rgba(0,0,0,.08);
+    .del{
+      width: 40rpx;
+      height: 40rpx;
+      position: absolute;
+      top: 10rpx;
+      right: 10rpx;
+      image{
+        width: 40rpx;
+        height: 40rpx
+      }
+    }
     .image{
       margin-top: 60rpx;
       display: block;

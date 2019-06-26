@@ -23,7 +23,7 @@
         <text>{{ btnText }}</text>
       </view>
       <view class="btn-giveup">
-        <text>放弃</text>
+        <text @tap="giveup">放弃</text>
       </view>
       <view class="tips">
         <text>坚持就是胜利</text>
@@ -39,7 +39,7 @@
   import { getTimeArr, isZero } from '@/utils/util'
   
   let timer = null
-
+  const db = wx.cloud.database()
   export default class Clock extends wepy.page {
     config = {
       navigationBarTitleText: '计时器'
@@ -48,7 +48,7 @@
     data = {
       planId: '',     // 计划ID
       planTitle: '',  // 计划标题
-      totalTime: 0,    // 计划执行时间（秒）
+      totalTime: 0,    // 计划执行时间（分钟）
       restTime: 0,    // 计划执行剩余的事件（秒）
       isStart: false, // 本次计划是否开始
       hadSet: false,  // 记录是否设置过事件
@@ -100,28 +100,47 @@
         } else {
           this.isStart = false
           this.btnText = '开始'
-          console.log('请先设置时长')
+          wx.showToast({
+            title: '请先设置时长',
+            icon: 'none',
+            image: '',
+            duration: 1500
+          })
         }
         this.$apply()
+      },
+
+      giveup() {
+        wx.switchTab({
+          url: '/pages/plan'
+        })
       }
     }
 
     // 自定义辅助函数
-    loop(time, cb) {
+    async loop(time, cb) {
       let arr = getTimeArr(new Date().getTime() + time * 1000)
       cb && cb(arr)
       if (isZero(arr)) {
         // 倒计时完成，清除定时器
         clearInterval(timer)
+        await this.finishPlan(this.totalTime)
         // 重置状态
         this.isStart = false
         this.hadSet = false
         this.btnText = '开始'
         this.$apply()
-        // 发送post请求发送数据
       }
     }
-
+    finishPlan(totalTime){
+      const _ = db.command
+      db.collection('plans').doc(this.planId).update({
+        data: {
+          minutes: _.inc(totalTime),
+          times: _.inc(1)
+        }
+      })
+    }
     onLoad(params) {
       // 没有传递计划ID，页面报错
       if (!params.planId || !params.planTitle) return

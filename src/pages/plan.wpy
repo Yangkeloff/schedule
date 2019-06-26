@@ -23,6 +23,7 @@
     right: 20rpx;
     width: 200rpx;
     height: 80rpx;
+    text-align: center;
     line-height: 80rpx;
     background-color: #138cff;
     color: #fff;
@@ -37,16 +38,16 @@
 </style>
 <template>
   <view class="plan">
-    <swiper class="swiper">
+    <swiper class="swiper" current="{{swiperIndex}}">
       <repeat for="{{ planList }}" key="index" index="index" item="item">
         <swiper-item>
           <planCard 
-            :id="item.id"
+            :id="item._id"
             :type="item.type"
             :title="item.title"
             :remark="item.remark"
             :createtime="item.create_time"
-            :hours="item.hours"
+            :minutes="item.minutes"
             :times="item.times">
           </planCard>
         </swiper-item>
@@ -68,16 +69,15 @@
 
 <script>
   import wepy from 'wepy'
-  import Toast from 'wepy-com-toast'
   import planCard from '../components/planCard'
   import modal from '../components/modal'
-
+  import { formatTime } from '../utils/util'
+  const db = wx.cloud.database()
   export default class Plan extends wepy.page {
     config = {
       navigationBarTitleText: '计划'
     }
     components = {
-      toast: Toast,
       planCard,
       newPlan: modal
     }
@@ -89,7 +89,8 @@
         '运动',
         '娱乐'
       ],
-      showFlag: false
+      showFlag: false,
+      swiperIndex: 0
     }
 
     computed = {}
@@ -100,25 +101,85 @@
       }
     }
 
-    changeShow(){
-      this.showFlag = !this.showFlag
+    async getPlanList(){
+      let context = await this.getContext()
+      try {
+        let res = await db.collection('plans').where({
+          _openid: context.openid
+        }).get()
+        if(res){
+          this.planList = res.data
+          this.$apply()
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
 
+    changeShow(){
+      this.showFlag = !this.showFlag
+      this.$apply()
+    }
+    async getContext(){
+      const res = await wx.cloud.callFunction({
+        name: 'getContext'
+      }) 
+      return res.result
+    }
+    toLastSwiper() {
+      this.swiperIndex = this.planList.length - 1
+      this.$apply()
+    }
     events = {
       closeModal() {
         this.changeShow()
       },
-      addPlan(plan) {
-        this.changeShow()
-        console.log(plan)
+      async addPlan(plan) {
+        try {
+          let res = await db.collection('plans').add({
+          data: {
+            create_time: formatTime(new Date()),
+            type: plan.planType,
+            title: plan.planTitle,
+            remark: plan.planRemark,
+            minutes: 0,
+            times: 0,
+            }
+          })
+          if(res) {
+            wx.showToast({
+              title: '添加成功',
+              icon: 'success',
+              duration: 2000
+            })
+            await this.getPlanList()
+            this.changeShow()
+            this.toLastSwiper()
+          }
+        } catch (error) {
+          wx.showToast({
+            title: '添加失败',
+            duration: 2000
+          })
+        }
+      },
+      async delPlan(id) {
+        try {
+          let res = await db.collection('plans').doc(id).remove()
+          await this.getPlanList()
+          this.toLastSwiper()
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
 
     onLoad() {
     }
 
-    onShow() {
-      
+    async onShow() {
+      await this.getPlanList()
+      console.log(this.planList)
     }
   }
 </script>
