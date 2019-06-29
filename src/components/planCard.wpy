@@ -84,7 +84,7 @@
   }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
   .plan-card {
     position: relative;
     display: flex;
@@ -94,8 +94,8 @@
     height: 100%;
     background-color: #fff;
     box-sizing: border-box;
-    border-radius: 5px;
-    box-shadow: 0 0 12px 2px rgba(0,0,0,.08);
+    border-radius: 10rpx 10rpx 300rpx 10rpx;
+    box-shadow: 0 0 14rpx 4rpx rgba(0,0,0,.08);
     .del{
       width: 40rpx;
       height: 40rpx;

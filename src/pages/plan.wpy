@@ -102,17 +102,28 @@
     }
 
     async getPlanList(){
-      let context = await this.getContext()
       try {
         let res = await db.collection('plans').where({
-          _openid: context.openid
+          _openid: this.$parent.globalData.openid
         }).get()
-        if(res){
+        if(res.data){
           this.planList = res.data
           this.$apply()
+        } else{
+          console.log(res)
+          wx.showToast({
+            title: "res error",
+            icon: 'none',
+            duration: 1500
+          })
         }
       } catch (error) {
         console.log(error)
+        wx.showToast({
+          title: 'catch error',
+          icon: 'none',
+          duration: 1500
+        })
       }
     }
 
@@ -120,12 +131,7 @@
       this.showFlag = !this.showFlag
       this.$apply()
     }
-    async getContext(){
-      const res = await wx.cloud.callFunction({
-        name: 'getContext'
-      }) 
-      return res.result
-    }
+    
     toLastSwiper() {
       this.swiperIndex = this.planList.length - 1
       this.$apply()
@@ -146,7 +152,7 @@
             times: 0,
             }
           })
-          if(res) {
+          if(res._id) {
             wx.showToast({
               title: '添加成功',
               icon: 'success',
@@ -159,6 +165,7 @@
         } catch (error) {
           wx.showToast({
             title: '添加失败',
+            icon: 'none',
             duration: 2000
           })
         }
@@ -166,10 +173,21 @@
       async delPlan(id) {
         try {
           let res = await db.collection('plans').doc(id).remove()
-          await this.getPlanList()
-          this.toLastSwiper()
+          if(res){
+            wx.showToast({
+              title: '删除成功',
+              icon: 'success',
+              duration: 2000
+            })
+            await this.getPlanList()
+            this.toLastSwiper()
+          }
         } catch (error) {
-          console.log(error)
+          wx.showToast({
+            title: '删除失败' + error,
+            icon: 'none',
+            duration: 2000
+          })
         }
       }
     }
@@ -179,7 +197,6 @@
 
     async onShow() {
       await this.getPlanList()
-      console.log(this.planList)
     }
   }
 </script>

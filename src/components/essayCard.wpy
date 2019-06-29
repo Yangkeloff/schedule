@@ -1,0 +1,130 @@
+<!-- 动态卡片 -->
+<template>
+  <view class='essay-card'>
+    <view class="left">
+      <image src="{{item.userInfo.avatarUrl}}" />
+    </view>
+    <view class="right">
+      <view class="nickname">
+        {{item.userInfo.nickName}}
+      </view>
+      <view class="content">
+        {{item.essay}}
+      </view>
+      <view class="location">
+        {{item.location.city}}{{item.location.district}}{{item.location.street}}
+      </view>
+      <view class="bottom">
+        <view class="create-time">
+          {{item.create_time[1]}}月{{item.create_time[2]}}日{{item.create_time[3]}}:{{item.create_time[4]}}
+        </view>
+        <view wx:if="{{currentUser === item._openid}}" class="del" @tap="onDel({{item._id}})">
+          删除
+      </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class EssayCard extends wepy.component {
+    props = {
+      item: {
+        type: Object,
+        default: null
+      },
+      currentUser: String
+    }
+
+    data = {}
+
+    components = {}
+
+
+
+    methods = {
+      onDel(id) {
+        this.$emit('delEssay', id)
+      }
+    }
+
+    events = {}
+
+    watch = {}
+
+    computed = {}
+
+    onLoad() {
+    }
+
+    onShow() {}
+  }
+</script>
+
+<style lang='less' scoped>
+.essay-card{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10rpx 0;
+  width: 100%;
+  background-color: #fff;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e5e5e5;
+}
+.left{
+  padding-top: 10rpx;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: flex-start;
+  image{
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+  }
+}
+.right{
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  .nickname{
+    margin-bottom: 10rpx;
+    flex: 1;
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #074177;
+  }
+  .content{
+    margin-bottom: 10rpx;
+    overflow-wrap: break-word;
+    font-size: 32rpx;
+    font-weight: normal;
+    color: #000000;
+  }
+  .location{
+    margin-bottom: 10rpx;
+    flex: 1;
+    font-size: 20rpx;
+    font-weight: normal;
+    color: #074177;
+  }
+  .bottom{
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    font-size: 20rpx;
+    font-weight: normal;
+    color: #b8b8b8;
+    .del{
+      margin-left: 30rpx;
+    }
+  }  
+}
+
+</style>

@@ -1,0 +1,128 @@
+<!-- addEssay -->
+<template>
+  <view class="new-essay">
+    <view class="left">
+      <textarea value="{{essayContent}}" @input="bindTextAreaChanged" placeholder="留下点什么吧.." />
+      <view class="location">{{location.province}}{{location.city}}{{location.district}}{{location.street}}</view>
+    </view>
+    <view class="right">
+      <image src="{{userInfo.avatarUrl}}"></image>
+      <view class="nick-name">{{userInfo.nickName}}</view>
+      <button class="submit" @tap="onSubmit" disabled="{{isDisabled}}">发布</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class NewEssay extends wepy.component {
+    props = {
+      location: {
+        type: Object,
+        default: null
+      }
+    }
+
+    data = {
+      isDisabled: true,
+      userInfo: {},
+      essay: {},
+      essayContent: ''
+    }
+
+    components = {}
+
+    getUserInfo() {
+      this.userInfo = wx.getStorageSync('userInfo')
+      this.$apply()
+    }
+
+    methods = {
+      bindTextAreaChanged(e) {
+        if(e.detail.value === '') {
+          this.isDisabled = true
+        } else {
+          this.essay = e.detail.value
+          this.isDisabled = false
+        }
+        this.$apply()
+      },
+      async onSubmit(){
+        await this.$emit('addEssay', this.essay, this.userInfo)
+      },
+      clearContent() {
+        this.essayContent = ''
+        this.$apply()
+        console.log('clearContent')
+      }
+    }
+
+    events = {
+    }
+
+    watch = {}
+
+    computed = {}
+
+    onLoad() {
+      this.getUserInfo()
+    }
+
+    onShow() { 
+      
+    }
+  }
+</script>
+
+<style lang='less' scoped>
+.new-essay{
+  display: flex;
+  padding: 10rpx;
+  box-sizing: border-box;
+  width: 100%;
+  .left{
+    flex: 1;
+    position: relative;
+    textarea{
+      width: 100%;
+      box-sizing: border-box;
+      height: 100%;
+      border-radius: 20rpx;
+      padding: 30rpx 30rpx 60rpx 30rpx;
+      border: 1px dashed;
+      border-color: rgba(0, 0, 0, 0.3);
+    }
+    .location{
+      position: absolute;
+      left: 10rpx;
+      bottom: 10rpx;
+      font-size: 25rpx;
+    }
+  }
+  .right{
+    flex: 0 0 25%;
+    box-sizing: border-box;
+    margin-left: 10rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    image{
+      flex: 1;
+      width: 150rpx;
+      height: 150rpx;
+      border-radius: 50%;
+    }
+    .nick-name{
+      flex: 0 0 25%;
+      font-size: 25rpx;
+    }
+    .submit{
+      flex: 0 0 25%;
+      background-color: aquamarine;
+    }
+  }
+}
+.textarea-placeholder{
+  font-weight: 100;
+}
+</style>

@@ -1,34 +1,194 @@
 <!-- 发现 -->
 <template>
-  <view class='container'>
-    <h1>发现</h1>
+  <view class='discover'>
+    <view class="essay-list">
+      <repeat for="{{essayList}}" key="index" index="index" item="item">
+        <essayCard
+        class="essay-card"
+        :currentUser.sync="currentUser"
+        :item.sync="item"
+        :essayContent.sync="essayContent"
+        ></essayCard>
+      </repeat>
+    </view>
+    <newEssay
+    class="new-essay"
+    :location.sync="location"
+    ></newEssay>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import essayCard from '../components/essayCard'
+  import newEssay from '../components/newEssay'
+  import { formatTime } from '../utils/util'
+  const QQMapWX = require('../assets/lib/qqmap-wx-jssdk.min.js')
+  let qqmapsdk
+  const db = wx.cloud.database()
   export default class Discover extends wepy.page {
     config = {
       navigationBarTitleText: '',
     }
 
-    data = {}
+    data = {
+      essayList: [],
+      location: {},
+      newEssay: '',
+      currentUser: ''
+    }
 
-    components = {}
+    components = {
+      newEssay,
+      essayCard
+    }
 
-    methods = {}
+    getLocation(){
+      // 实例化API核心类
+      qqmapsdk = new QQMapWX({
+        key: '6J6BZ-3F3W3-FIZ34-YFXAN-6Z4CH-UQBHB'
+      })
+      let that = this
+      wx.getLocation({
+        type: 'gcj02',
+        success (res) {
+          qqmapsdk.reverseGeocoder({
+            location: { 
+              latitude: res.latitude,
+              longitude: res.longitude
+            },
+            success (res) {
+              let geo = res.result.address_component
+              that.location = {
+                nation: geo.nation,
+                province: geo.province === geo.city ? '': geo.province,
+                city: geo.city,
+                district: geo.district,
+                street: geo.street
+              }
+              that.$apply()
+            }
+          })
+        }
+      })
+    }
 
-    events = {}
+    async getEssayList() {
+      try {
+        let res = await db.collection('discovers').get()
+        if(res.data) {
+          this.essayList = res.data
+          this.$apply()
+        }
+      } catch (error) {
+        wx.showToast({
+          title: '获取列表失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    }
+
+    methods = {
+    }
+
+    events = {
+      async addEssay(essay, userInfo) {
+        try {
+          let res = await db.collection('discovers').add({
+            data: {
+              userInfo,
+              essay,
+              location: this.location,
+              create_time: formatTime(new Date())
+            }
+          })
+          if(res._id){
+            this.getEssayList()
+            this.$invoke('newEssay', 'clearContent')
+            wx.showToast({
+              title: '发布成功',
+              icon: 'success',
+              duration: 1500
+            })
+          } else {
+            console.log(res)
+            wx.showToast({
+              title: 'res失败',
+              icon: 'none',
+              duration: 1500
+            })
+          }
+        } catch (error) {
+          console.log(error)
+          wx.showToast({
+            title: 'error失败',
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      },
+      async delEssay(id) {
+        try {
+          let res = db.collection('discovers').doc(id).remove()
+          if(res){
+            this.getEssayList()
+            wx.showToast({
+              title: '删除成功',
+              icon: 'success',
+              duration: 1500
+            })
+          } else {
+            console.log(res)
+            wx.showToast({
+              title: 'res失败',
+              icon: 'none',
+              duration: 1500
+            })
+          }
+        } catch (error) {
+          console.log(error)
+          wx.showToast({
+            title: 'error失败',
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      }
+    }
 
     watch = {}
 
     computed = {}
 
-    onLoad() { }
+    async onLoad() {
+      await this.getLocation()
+    }
 
-    onShow() { }
+    async onShow() {
+      this.currentUser = this.$parent.globalData.openid
+      this.$apply()
+      await this.getEssayList()
+    }
   }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
+.discover{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+.essay-list{
+  order: -1;
+  height: 835rpx;
+  overflow: auto;
+}
+.new-essay{
+  height: 275rpx;
+}
+.essay-card{
+  flex: 1;
+}
+
 </style>

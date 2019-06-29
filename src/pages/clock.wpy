@@ -140,6 +140,11 @@
           times: _.inc(1)
         }
       })
+      wx.showToast({
+        title: '计时结束',
+        icon: 'success',
+        duration: 1500
+      })
     }
     onLoad(params) {
       // 没有传递计划ID，页面报错
