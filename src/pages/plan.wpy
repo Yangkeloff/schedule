@@ -19,16 +19,10 @@
   }
   .new-btn{
     position: fixed;
-    bottom: 20rpx;
-    right: 20rpx;
-    width: 200rpx;
-    height: 80rpx;
-    text-align: center;
-    line-height: 80rpx;
-    background-color: #138cff;
-    color: #fff;
-    font-size: 25rpx;
-    border-radius: 40rpx;
+    right: 55rpx;
+    bottom: 55rpx;
+    width: 96rpx;
+    height: 96rpx;
   }
   .new-plan{
     position: absolute;
@@ -53,9 +47,7 @@
         </swiper-item>
       </repeat>
     </swiper>
-    <button class="new-btn" @tap="onNew">
-      新计划
-    </button>
+    <image src="../assets/img/add.png" class="new-btn" @tap="onNew"></image>
     <newPlan 
     wx:if="{{showFlag}}" 
     class="new-plan"

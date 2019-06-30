@@ -13,7 +13,6 @@
     <text class="remark">{{ remark }}</text>
     <text class="hours">执行 {{ times }} 次,共 {{ minutes }} 分钟</text>
     <text class="time">该计划于 {{createtime[0]}}年{{createtime[1]}}月{{createtime[2]}}日{{createtime[3]}}:{{createtime[4]}}:{{createtime[5]}} 创建</text>
-
     <view class="btn-do" @tap="bindDoPlan({{ id }}, {{ title }})">
       <text wx:if="{{ times <= 0 }}">开始执行</text>
       <text wx:else>继续执行</text>
@@ -94,7 +93,7 @@
     height: 100%;
     background-color: #fff;
     box-sizing: border-box;
-    border-radius: 10rpx 10rpx 300rpx 10rpx;
+    border-radius: 20rpx 20rpx 300rpx 20rpx;
     box-shadow: 0 0 14rpx 4rpx rgba(0,0,0,.08);
     .del{
       width: 40rpx;
@@ -135,22 +134,22 @@
     }
     .time{
       position: absolute;
-      bottom: 60rpx;
+      bottom: 210rpx;
     }
     .hours{
       position: absolute;
-      bottom: 100rpx;
+      bottom: 250rpx;
       font-weight: bold;
     }
     .btn-do{
       position: absolute;
-      bottom: 180rpx;
+      bottom: 330rpx;
       width: 35%;
       height: 70rpx;
       line-height: 70rpx;
       text-align: center;
       background-color: #138cff;
-      border-radius: 20rpx;
+      border-radius: 60rpx;
       color: #fff;
       font-size: 28rpx;
       transition: background-color 0.3s;

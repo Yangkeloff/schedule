@@ -105,7 +105,6 @@
           })
           if(res._id){
             this.getEssayList()
-            this.$invoke('newEssay', 'clearContent')
             wx.showToast({
               title: '发布成功',
               icon: 'success',

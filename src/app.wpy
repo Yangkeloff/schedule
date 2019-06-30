@@ -4,10 +4,7 @@ page{
   background-color: #f9fbff;
   font-family: Microsoft Yahei;
 }
-.textarea-placeholder, .input-placeholder{
-  font-size: 22rpx;
-  font-weight: 100;
-}
+
 </style>
 
 <script>

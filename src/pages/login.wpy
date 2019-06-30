@@ -8,6 +8,9 @@
     class="login-btn"
     >授权登录</button>
     <view wx:else>请升级微信版本</view>
+    <view class="copyright">
+      <text>©2019 by Yangkeloff.All rights reserved.</text>
+    </view>
   </view>
 </template>
 
@@ -59,6 +62,8 @@
   display: flex;
   justify-content: center;
   height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1518976024611-28bf4b48222e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2132&q=80');
+  background-size: 100% 100%;
 }
 .login-btn{
   align-self: flex-end;
@@ -71,5 +76,17 @@
   font-size: 30rpx;
   letter-spacing: 8rpx;
   border-radius: 40rpx;
+}
+.copyright{
+  position: absolute;
+  display: flex;
+  right: 10rpx;
+  bottom: 10rpx;
+  text{
+    align-self: center;
+    margin-left: 5rpx;
+    font-size: 25rpx;
+    color: #878787;
+  }
 }
 </style>
