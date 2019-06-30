@@ -83,3 +83,10 @@ overflow: hidden;
 8. flex元素中的文字自动换行
 元素中`overflow-wrap: break-word;`  
 父容器中`overflow: hidden;`
+
+9. 真机测试中input,textarea被软键盘遮挡的解决
+> cursor-spacing 指定光标与键盘的距离。取textarea距离底部的距离和cursor-spacing指定的距离的最小值作为光标与键盘的距离
+例:
+```
+<textarea value="{{essayContent}}" @input="bindTextAreaChanged" placeholder="留下点什么吧.." cursor-spacing="140" />
+```
