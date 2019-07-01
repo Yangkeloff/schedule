@@ -10,7 +10,7 @@
 		"checkInvalidKey": true
 	},
 	"compileType": "miniprogram",
-	"appid": "wx2014ec79cb60df16",
+	"appid": "wx630c15c78b4307b2",
 	"projectname": "schedule",
 	"miniprogramRoot": "dist/",
 	"simulatorType": "wechat",

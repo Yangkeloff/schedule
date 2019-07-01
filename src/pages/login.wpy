@@ -62,7 +62,7 @@
   display: flex;
   justify-content: center;
   height: 100%;
-  background-image: url('https://images.unsplash.com/photo-1518976024611-28bf4b48222e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2132&q=80');
+  background-image: url('https://yangkeloff-1253356113.cos.ap-beijing.myqcloud.com/photo-1518976024611-28bf4b48222e.jpg');
   background-size: 100% 100%;
 }
 .login-btn{
