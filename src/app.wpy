@@ -96,6 +96,14 @@ export default class extends wepy.app {
     }) 
     this.globalData.openid = res.result.openid
   }
+  async checkMsg(msg) {
+    await wx.cloud.callFunction({
+      name: 'checkSec',
+      data: {
+        msg: String(msg)
+      }
+    })
+  }
   
   checkLoginStatus() {
     let that = this

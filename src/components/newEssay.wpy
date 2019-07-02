@@ -38,7 +38,10 @@
       this.userInfo = wx.getStorageSync('userInfo')
       this.$apply()
     }
-
+    clearAdd() {
+      this.essayContent = ''
+      this.$apply()
+    }
     methods = {
       bindTextAreaChanged(e) {
         if(e.detail.value === '') {
@@ -51,8 +54,6 @@
       },
       onSubmit(){
         this.$emit('addEssay', this.essayContent, this.userInfo)
-        this.essayContent = ""
-        this.$apply()
       }
     }
 
