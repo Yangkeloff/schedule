@@ -4,7 +4,7 @@
     <view class="left">
       <textarea value="{{essayContent}}" @input="bindTextAreaChanged" placeholder="留下点什么吧.." cursor-spacing="140" />
       <view class="location">
-        <image src="../assets/img/location.png"></image>
+        <image @tap="getLocation" src="../assets/img/location.png"></image>
         {{location.province}}{{location.city}}{{location.district}}{{location.street}}
       </view>
     </view>
@@ -54,6 +54,9 @@
       },
       onSubmit(){
         this.$emit('addEssay', this.essayContent, this.userInfo)
+      },
+      getLocation(){
+        this.$emit('onGetLocation')
       }
     }
 

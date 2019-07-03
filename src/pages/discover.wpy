@@ -42,7 +42,9 @@
       newEssay,
       essayCard
     }
-
+    onShareAppMessage() {
+      
+    }
     getLocation(){
       // 实例化API核心类
       qqmapsdk = new QQMapWX({
@@ -67,6 +69,7 @@
                 street: geo.street
               }
               that.$apply()
+              console.log(that.location)
             }
           })
         }
@@ -96,6 +99,14 @@
       async addEssay(essay, userInfo) {
         try {
           await this.$parent.checkMsg(essay)
+          if(Object.keys(this.location).length === 0) {
+            wx.showToast({
+              title: '未定位成功,请点击位置图标尝试定位',
+              icon: 'none',
+              duration: 1500
+            })
+            return
+          }
           let res = await db.collection('discovers').add({
             data: {
               userInfo,
@@ -155,6 +166,9 @@
             duration: 1500
           })
         }
+      },
+      onGetLocation() {
+        this.getLocation()
       }
     }
 

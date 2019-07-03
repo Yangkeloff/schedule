@@ -1,0 +1,44 @@
+<!-- 指引 -->
+<template>
+  <view class='direct'>
+    指引
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Direct extends wepy.component {
+    props = {}
+
+    data = {}
+
+    components = {}
+
+    methods = {}
+
+    events = {}
+
+    watch = {}
+
+    computed = {}
+
+    onLoad() { }
+
+    onShow() { }
+  }
+</script>
+
+<style lang='less'>
+.direct{
+  position: relative;
+  background-color: rgba(0, 0, 0, .3);
+  color: #fff;
+}
+.arrow{
+  position: absolute;
+  right: 55rpx;
+  bottom: 55rpx;
+  width: 96rpx;
+  height: 96rpx;
+}
+</style>

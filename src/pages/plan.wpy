@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
   .plan {
     display: flex;
     justify-content: center;
@@ -25,6 +25,11 @@
     height: 96rpx;
   }
   .new-plan{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  .direct{
     position: absolute;
     width: 100%;
     height: 100%;
@@ -56,6 +61,10 @@
         新计划
       </view>
     </newPlan>
+    <direct 
+    class="direct" 
+    wx:if="{{planList.length === 0}}">
+    </direct>
   </view>
 </template>
 
@@ -63,6 +72,7 @@
   import wepy from 'wepy'
   import planCard from '../components/planCard'
   import modal from '../components/modal'
+  import direct from '../components/direct'
   import { formatTime } from '../utils/util'
   const db = wx.cloud.database()
   export default class Plan extends wepy.page {
@@ -71,7 +81,8 @@
     }
     components = {
       planCard,
-      newPlan: modal
+      newPlan: modal,
+      direct
     }
 
     data = {
@@ -92,7 +103,10 @@
         this.changeShow()
       }
     }
-
+    onShareAppMessage() {
+      
+    }
+    
     async getPlanList(){
       try {
         let res = await db.collection('plans').where({
@@ -128,6 +142,7 @@
       this.swiperIndex = this.planList.length - 1
       this.$apply()
     }
+    
     events = {
       closeModal() {
         this.changeShow()
