@@ -1,5 +1,8 @@
 ## 体验
-![scan](https://yangkeloff-1253356113.cos.ap-beijing.myqcloud.com/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg)
+![scan](https://yangkeloff-1253356113.cos.ap-beijing.myqcloud.com/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg)  
+
+
+
 
 ## 坑
 1. 异步父子组件传值需要注意
